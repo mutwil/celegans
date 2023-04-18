@@ -3,32 +3,20 @@ from flask import Flask, render_template, request, redirect, url_for
 import pickle
 
 def generate_cytoscape_js(elements):
-    # Identify nodes with more than 40 edges
-    node_edges = {}
-    for edge in elements:
-        source = edge["source"]
-        target = edge["target"]
-        node_edges[source] = node_edges.get(source, 0) + 1
-        node_edges[target] = node_edges.get(target, 0) + 1
-    compound_nodes = set(node for node, count in node_edges.items() if count > 40)
+    nodes = [
+        "{ data: { id: '%s' } }" % node.replace("'", r"\'")
+        for node in set(edge["source"] for edge in elements) | set(edge["target"] for edge in elements)
+    ]
+    edges = [
+        "{ data: { id: 'edge%s', source: '%s', target: '%s', interaction: '%s' } }" % (
+            i,
+            edge['source'].replace("'", r"\'"),
+            edge['target'].replace("'", r"\'"),
+            edge['interaction'].replace("'", r"\'"),
+        )
+        for i, edge in enumerate(elements)
+    ]
 
-    # Generate nodes and edges
-    nodes = []
-    edges = []
-    for node, count in node_edges.items():
-        if node in compound_nodes:
-            # Replace node with a compound node
-            nodes.append("{ data: { id: '%s', compound: true } }" % node.replace("'", r"\'"))
-            compound_edges = []
-            for edge in elements:
-                if edge["source"] == node or edge["target"] == node:
-                    compound_edges.append("{ data: { source: '%s', target: '%s' } }" % (edge["source"].replace("'", r"\'"), edge["target"].replace("'", r"\'")))
-            edges.append(compound_edges)
-            continue
-        nodes.append("{ data: { id: '%s' } }" % node.replace("'", r"\'"))
-        edges.append("{ data: { source: '%s', target: '%s' } }" % (edge["source"].replace("'", r"\'"), edge["target"].replace("'", r"\'")) for edge in elements if edge["source"] == node or edge["target"] == node)
-
-    # Generate cytoscape.js code
     script = f"""
     document.addEventListener('DOMContentLoaded', function () {{
       const cy = cytoscape({{
@@ -39,7 +27,7 @@ def generate_cytoscape_js(elements):
           {', '.join(nodes)},
     
           // Edges
-          {', '.join(edge for edge_list in edges for edge in edge_list)}
+          {', '.join(edges)}
         ],
     
         style: [
@@ -83,10 +71,10 @@ def generate_cytoscape_js(elements):
         }}
       }});
 
-
+    }}
+    );
     """
     return script
-
 
 app = Flask(__name__)
 
