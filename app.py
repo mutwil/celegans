@@ -3,20 +3,32 @@ from flask import Flask, render_template, request, redirect, url_for
 import pickle
 
 def generate_cytoscape_js(elements):
-    nodes = [
-        "{ data: { id: '%s' } }" % node.replace("'", r"\'")
-        for node in set(edge["source"] for edge in elements) | set(edge["target"] for edge in elements)
-    ]
-    edges = [
-        "{ data: { id: 'edge%s', source: '%s', target: '%s', interaction: '%s' } }" % (
-            i,
-            edge['source'].replace("'", r"\'"),
-            edge['target'].replace("'", r"\'"),
-            edge['interaction'].replace("'", r"\'"),
-        )
-        for i, edge in enumerate(elements)
-    ]
+    # Identify nodes with more than 40 edges
+    node_edges = {}
+    for edge in elements:
+        source = edge["source"]
+        target = edge["target"]
+        node_edges[source] = node_edges.get(source, 0) + 1
+        node_edges[target] = node_edges.get(target, 0) + 1
+    compound_nodes = set(node for node, count in node_edges.items() if count > 40)
 
+    # Generate nodes and edges
+    nodes = []
+    edges = []
+    for node, count in node_edges.items():
+        if node in compound_nodes:
+            # Replace node with a compound node
+            nodes.append("{ data: { id: '%s', compound: true } }" % node.replace("'", r"\'"))
+            compound_edges = []
+            for edge in elements:
+                if edge["source"] == node or edge["target"] == node:
+                    compound_edges.append("{ data: { source: '%s', target: '%s' } }" % (edge["source"].replace("'", r"\'"), edge["target"].replace("'", r"\'")))
+            edges.append(compound_edges)
+            continue
+        nodes.append("{ data: { id: '%s' } }" % node.replace("'", r"\'"))
+        edges.append("{ data: { source: '%s', target: '%s' } }" % (edge["source"].replace("'", r"\'"), edge["target"].replace("'", r"\'")) for edge in elements if edge["source"] == node or edge["target"] == node)
+
+    # Generate cytoscape.js code
     script = f"""
     document.addEventListener('DOMContentLoaded', function () {{
       const cy = cytoscape({{
@@ -27,7 +39,7 @@ def generate_cytoscape_js(elements):
           {', '.join(nodes)},
     
           // Edges
-          {', '.join(edges)}
+          {', '.join(edge for edge_list in edges for edge in edge_list)}
         ],
     
         style: [
@@ -71,10 +83,10 @@ def generate_cytoscape_js(elements):
         }}
       }});
 
-    }}
-    );
+
     """
     return script
+
 
 app = Flask(__name__)
 
@@ -118,16 +130,37 @@ def search():
         return render_template('not_found.html')
 
 if __name__ == '__main__':
-    with open('C. elegans[Organism]_papers.txt', 'rb') as file:
-        genes = pickle.load(file)
-    items, papers = 0, []
-    for i in genes:
-        items+=1
-        for j in genes[i]:
-            papers.append(j[3])
-    papers = set(papers)    
-    print(papers)
+    import os
+    items, edges = [],0
+    for i in os.listdir(os.getcwd()+'/annotations/'):
+        a = open(os.getcwd()+'/annotations/'+i,'r').read()
+        
+        if len(a)>0:
+            findings = a.split('\n\n')[1].split('\n')
+            
+            for j in findings:
+                if j.count('!')==2:
+                    splitta = j.split('!')
+        
+                    agentA, _, agentB = splitta
+                    agentA = agentA.split(':')[0].upper()
+                    agentB = agentB.strip().upper()
+                    edges+=1
+                    items+=[agentA]
+                    items+=[agentB]
+                
+        
+    # with open('C. elegans[Organism]_papers.txt', 'rb') as file:
+    #     genes = pickle.load(file)
+    # items, papers = 0, []
+    # for i in genes:
+    #     items+=1
+    #     for j in genes[i]:
+    #         papers.append(j[3])
+    # papers = set(papers)    
+    # print(papers)
     
     v = open('stats.txt','w')
-    v.write(str(len(papers))+'\t'+str(items))
+    v.write(str(len(os.listdir(os.getcwd()+'/annotations/')))+'\t'+str(len(set(items))))
     v.close()
+    app.run(debug=True)
