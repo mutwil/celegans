@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3DGO</title>
+    <style>
+      /* Add styles for the page header */
+      header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0;
+      }
+
+      /* Add styles for the search form */
+      form {
+        margin: 20px auto;
+        max-width: 600px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+      input[type="submit"] {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* Add styles for the footer */
+      footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+	  
+      /* Add styles for the search tips */
+      .stats {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+      }
+      /* Add styles for the search tips */
+      .search-tips {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+      }
+
+      .search-tips h2 {
+        margin-top: 0;
+        font-size: 24px;
+      }
+      .future {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>3D Genome Organization Database</h1>
+	  <p>This database (very early development) used GPT to identify functional associations between genes, molecules, compartments and other entities. The topic of this database is: 3D genome organization.</p>
+	  <p>The database was created by asking GPT to scan abstracts of research articles.</p>
+	  <p><b>The topic of this database is: 3D genome organization.</b></p>
+
+    </header>
+	
+    <form action="/search" method="POST">
+      <label for="gene_id">Enter Gene ID/molecule/compartment</label>
+      <input type="text" id="gene_id" name="gene_id" placeholder="e.g. ESR1">
+      <input type="submit" value="Search">
+    </form>
+	
+	
+	<div class="stats">
+	  <h2>Stats:</h2>
+      <ul>
+        <li>Number of genes/molecules/compartments and other entities: {{entities}}</li>
+		<li>Number of analyzed publication abstracts: {{papers}}</li>
+      </ul>
+    </div>
+	
+    <div class="search-tips">
+      <h2>Search Tips:</h2>
+      <ul>
+        <li>Search by gene/molecule/compartment/stress/organ or some other term</li>
+		<li>E.g., you could search for esr1/envelope/heat</li>
+		<li>The search engine is very primitive (for now), so 100% match is required</li>
+        <li>Use partial search terms to broaden your results (e.g. "esr1" instead of "esr1 binding")</li>
+        <li>Try searching for related terms or synonyms</li>
+      </ul>
+    </div>
+	
+	<div class="future">
+	  <h2>Future:</h2>
+      <ul>
+        <li>Grind through all abstracts from main journals</li>
+		<li>Date range: 2005-now</li>
+      </ul>
+    </div>
+	<div class="future">
+	  <img src="{{ url_for('static', filename='capture.png') }}" alt="App Screenshot" style="max-width: 100%;">
+	</div>
+    <footer>
+      &copy; 2023 HumanConnectome @labmutwil
+    </footer>
+  </body>
+</html>
