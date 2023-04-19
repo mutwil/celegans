@@ -1,0 +1,65 @@
+document.addEventListener('DOMContentLoaded', function () {
+  const cy = cytoscape({
+	container: document.getElementById('cy'),
+	elements: [
+	  // Nodes
+	  NODES,
+
+	  // Edges
+	  EDGES
+	],
+
+	style: [
+	  {
+		selector: 'node',
+		style: {
+		  'background-color': '#6FB1FC', // Node background color
+		  'label': 'data(id)',
+		  'color': '#000000', // Node label text color
+		  'text-opacity': 1, // Node label text opacity (0-1)
+		  'font-size': '6px',
+		  'text-halign': 'center',
+		  'text-valign': 'center',
+		  'text-wrap': 'wrap',
+		  'text-max-width': 50
+		},
+	  },
+
+	  {
+		selector: 'edge',
+		style: {
+		  'width': 2,
+		  'line-color': '#A9A9A9', // Edge line color
+		  'curve-style': 'bezier', // Edge curve style
+		  'target-arrow-color': '#ccc',
+		  'target-arrow-shape': 'triangle',
+		  'curve-style': 'bezier',
+		  'label': 'data(interaction)',
+		  'font-size': '6px',
+		  'text-wrap': 'wrap', // Enable edge label text wrapping
+		  'text-max-width': 50, // Maximum edge label text width before wrapping (in pixels)
+		  'text-rotation': 'autorotate',
+		  'text-margin-x': '5px',
+		  'text-margin-y': '-5px'
+		},
+	  },
+	],
+
+	layout: {
+	  name: 'cose'
+	}
+  });
+cy.on('click', 'node', function(evt){
+  var node = evt.target;
+  var neighborhood = node.neighborhood().add(node);
+  neighborhood.style('background-color', 'red');
+});
+
+cy.on('mouseout', 'node', function(evt){
+
+  var node = evt.target;
+  var neighborhood = node.neighborhood().add(node);
+  neighborhood.removeClass('red');
+});
+}
+);

@@ -28,21 +28,6 @@
       }
 
 
-
-      .button {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-top: 30px;
-      }
-
-      .button:hover {
-        background-color: #0069d9;
-        color: white;
-      }
 	  
 	  
 	#cy {
@@ -52,7 +37,11 @@
 	  margin-top: 30px;
 	  background-color: white !important;
 	}
-
+	
+	.faded {
+	  opacity: 0.3;
+	  background-color: red;
+	}
 	  body {
 		background-color: white;
 	  }
@@ -76,20 +65,6 @@
 	
     <script>
       {{ cytoscape_js_code | safe }}
-	  
-
-		const btn = document.querySelector('button');
-
-		btn.addEventListener('click', () => {
-		  if (cy) {
-			const base64URI = cy.png();
-			const img = document.createElement('img');
-			img.src = base64URI;
-			document.body.appendChild(img);
-		  } else {
-			console.log('Cytoscape instance is not initialized');
-		  }
-		});
     </script>
 	
 	
