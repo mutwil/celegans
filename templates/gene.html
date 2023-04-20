@@ -155,7 +155,8 @@
 		  underlinedData = underlinedData.replace(targetRegex, "<u><span class='red-text'>$&</span></u>");
 		}
 		var popupHTML = "<div class='paper-popup'><h2>" + source + " " + typa + " " + target + "</h2><pre>" + underlinedData + "</pre></div>";
-
+		var css = "<style>.popup-text { font-family: sans-serif; }</style>";
+		popupHTML = css + popupHTML;
 
 		
 		// Display the popup using the jQuery UI dialog function
