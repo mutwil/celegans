@@ -46,12 +46,25 @@
 		background-color: white;
 	  }
 	
+	.paper-popup {
+    background-color: black;
+    color: white;
+	  width: 100%;
+	  padding: 20px;
+    box-sizing: border-box;
+	}
+	
+	.red-text {
+  color: red;
+}
     </style>
 
   <script src="https://unpkg.com/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://unpkg.com/cytoscape-cola/cytoscape-cola.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   
   </head>
   <body>
@@ -61,12 +74,12 @@
 		<div id="cy" style="width: 100%; height: 100%; background-color: white !important;"></div>
 	</div>
 	
-    <button>Render PNG</button>
-	
+
     <script>
       {{ cytoscape_js_code | safe }}
     </script>
 	
+	<div id="interaction"></div>
 	
     <table class="sortable">
       <thead>
@@ -83,7 +96,8 @@
             <td>{{ gene.id }}</td>
             <td>{{ gene.inter_type }}</td>
             <td>{{ gene.target }}</td>
-            <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{ gene.publication }}">{{ gene.publication }}</a></td>
+			<td onclick="showPaperPopup('{{ gene.publication }}', '{{ gene.id }}', '{{ gene.inter_type }}', '{{ gene.target }}')">{{ gene.publication }}</td>
+            <!-- <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{ gene.publication }}">{{ gene.publication }}</a></td> -->
           </tr>
         {% endfor %}
       </tbody>
@@ -120,6 +134,55 @@
           sortTable(table, columnIndex, !currentDirection);
         });
       });
-    </script>
+    
+	function showPaperPopup(pubmedID, source, typa, target) {
+	  // Create the PubMed API URL for the paper
+	  var pubmedURL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=" + pubmedID + "&rettype=abstract&retmode=text";
+	  
+	  // Use jQuery to load the paper data from the PubMed API
+	  $.get(pubmedURL, function(data) {
+		// Create the HTML for the paper popup
+		
+		var sourceWords = source.split(/[,\s&+/\\']+/);
+		var targetWords = target.split(/[,\s&+/\\']+/);
+		var underlinedData = data;
+		for (var i = 0; i < sourceWords.length; i++) {
+		  var sourceRegex = new RegExp("\\b" + sourceWords[i].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "\\b", "gi");
+		  underlinedData = underlinedData.replace(sourceRegex, "<u><span class='red-text'>$&</span></u>");
+		}
+		for (var j = 0; j < targetWords.length; j++) {
+		  var targetRegex = new RegExp("\\b" + targetWords[j].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "\\b", "gi");
+		  underlinedData = underlinedData.replace(targetRegex, "<u><span class='red-text'>$&</span></u>");
+		}
+		var popupHTML = "<div class='paper-popup'><h2>" + source + " " + typa + " " + target + "</h2><pre>" + underlinedData + "</pre></div>";
+
+
+		
+		// Display the popup using the jQuery UI dialog function
+		
+    $(popupHTML).dialog({
+      width: "90%",
+      maxWidth: "none",
+      minHeight: "none",
+      modal: true,
+      close: function() {
+        $(this).dialog('destroy').remove();
+      }
+    })
+	  });
+	}
+
+	// Add a click event listener to the PubMed ID link
+	$("#pubmed-link").click(function() {
+	  // Get the PubMed ID from the link href attribute
+	  var pubmedID = $(this).attr("href").split("/").pop();
+	  
+	  // Show the paper popup
+	  showPaperPopup(pubmedID);
+	  
+	  // Prevent the default link behavior
+	  return false;
+	});
+	</script>
   </body>
 </html>
