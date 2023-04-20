@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   const cy = cytoscape({
 	container: document.getElementById('cy'),
+    zoomingEnabled: true,
+    wheelSensitivity: 0.2,
 	elements: [
 	  // Nodes
 	  NODES,
