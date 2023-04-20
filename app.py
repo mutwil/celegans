@@ -22,8 +22,7 @@ def generate_cytoscape_js(elements):
     edges = ', '.join(edges)
     return a.replace('NODES',nodes).replace('EDGES',edges)
 
-def process_network(elements):
-    
+def process_network(elements):    
     #remove redundancies
     edges = []
     for i in elements:
@@ -41,7 +40,25 @@ def process_network(elements):
     print(edgeTypes)
     return edges
 
+def find_terms(my_search, genes):   
+    forSending = []
+    elements = [] 
 
+    if len(my_search)>0:
+        for i in genes:
+            if '!' in my_search: #exact search
+                if my_search.upper().strip().replace('!','') == i.strip():
+                    for j in genes[i]:
+                        if j[0]!='' and j[2]!='':
+                            forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
+                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})                
+            if my_search.upper().strip() in i.strip():
+                print(i,'asd')
+                for j in genes[i]:
+                    if j[0]!='' and j[2]!='':
+                        forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
+                        elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})
+    return elements, forSending
 
 app = Flask(__name__)
 
@@ -67,19 +84,19 @@ def search():
     except:
         my_search='cesa'
          
-    forSending = []
-    elements = []
-    
     if len(my_search)>0:
-        for i in genes:
-            if my_search.upper() in i:
-                for j in genes[i]:
-                    if j[0]!='' and j[2]!='':
-                        forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
-                        elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})
+        split_search = my_search.split(';')
+        
+        forSending = []
+        elements = []    
+        for term in split_search:
+            results = find_terms(term, genes)
+            elements += results[0]
+            forSending += results[1]
 
-    elements = process_network(elements)
-    cytoscape_js_code = generate_cytoscape_js(elements)
+
+        elements = process_network(elements)
+        cytoscape_js_code = generate_cytoscape_js(elements)
     if forSending!=[]:
         return render_template('gene.html', genes=forSending, cytoscape_js_code=cytoscape_js_code)
     else:
