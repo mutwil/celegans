@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Search Results</title>
+    <style>
+      /* Add styles for the search results */
+      .search-results {
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        margin-top: 0;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      li:hover {
+        background-color: #f5f5f5;
+      }
+      a {
+        text-decoration: none;
+        color: #333;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+  .help-button {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+    </style>
+  </head>
+  <body>
+    <div class="search-results">
+      <h2>Help/FAQ</h2>
+	  <button class="help-button" onclick="window.location.href='{{ url_for('index') }}'">Go back</button>
+
+      <ul>
+        <li>
+          <p><strong>How was the database constructed?</strong></p>
+          <p>We used GPT to look at paper abstracts and identify pairs of entities (e.g., genes, molecules, compartments, basically anything) that 'act' on one another (e.g., enhances, interacts, affects, localizes to).</p>
+			<p></p>
+			<p>For example, given this abstract: </p>
+			<p>In plants, regulation of cellulose synthesis is fundamental for morphogenesis and plant growth. Cellulose is synthesized at the plasma membrane, and the orientation of synthesis is guided by cortical microtubules; however, the guiding mechanism is currently unknown. We show that the conditional root elongation pom2 mutants are impaired in cell elongation, fertility, and microtubule-related functions. Map-based cloning of the POM-POM2 locus revealed that it is allelic to CELLULOSE SYNTHASE INTERACTING1 (CSI1). Fluorescently tagged POM2/CSI1s associated with both plasma membrane-located cellulose synthases (CESAs) and post-Golgi CESA-containing compartments. Interestingly, while CESA insertions coincided with cortical microtubules in the pom2/csi1 mutants, the microtubule-defined movement of the CESAs was significantly reduced in the mutant. We propose that POM2/CSI1 provides a scaffold between the CESAs and cortical microtubules that guide cellulose synthesis.</p>
+			<p></p>
+			<p>GPT would return: </p>
+			<p>Cellulose: !synthesized at! Plasma Membrane </p>
+			<p>Cortical Microtubules: !guide! Cellulose Synthesis </p>
+			<p>POM2/CSI1: !associates with! CESAs </p>
+			<p>POM2/CSI1: !provides scaffold between! CESAs and Cortical Microtubules</p>		
+		</li>
+        <li>
+          <p><strong>How can the database be searched?</strong></p>
+          <p>We only processed abstracts, so gene identifiers (e.g., AT4G32410) might not be caught by GPT. You should rather use gene symbols (CESA1), as these tend to be used in abstracts.</p>
+			<p>You can also search for other items that are mentioned in the abstracts, e.g., proline, cold, root hair, and so on.</p>
+			<p>Additionally, you can search by author name or paper title.</p>
+		</li>
+        <li>
+          <p><strong>Which papers were analyzed?</strong></p>
+          <p>We based our journal selection by analyzing genes with experimentally verified function (source: TAIR).</p>
+		  <p>This allowed us to shortlist journals that typically contain functional information of plant genes.</p>
+			<p><img src="{{ url_for('static', filename='journals.png') }}" style="max-width: 100%;" alt="My Image"></p>
+		   <p>For journals not specific to plants (e.g., PNAS, Cell), we only processed papers discussing plants.</p>
+		   <p>Additionally, we only included papers published after 2004.</p>
+		</li>
+        <li>
+          <p><strong>How to use the KnowledgeNetwork viewer?</strong></p>
+          <p>The KnowledgeNetwork will show you all relationships found between your query and the entities detected by GPT.</p>
+		  <p>To focus your search and to simplify complex networks, click on Layout Options:</p>
+			<p><img src="{{ url_for('static', filename='layoutoptions.png') }}" style="max-width: 100%;" alt="My Image"></p>
+		   <p>Additionally, you can click or double click the nodes to make unwanted nodes transparent or to remove them. You can restore the nodes by clicking on the background. Right click also removes the clicked nodes.</p>
+		   <p><img src="{{ url_for('static', filename='networkmethods.png') }}" style="max-width: 100%;" alt="My Image"></p>
+		</li>
+        <li>
+          <p><strong>Can I see the paper abstracts that revealed a given association?</strong></p>
+          <p>Yes, below the KnowledgeNetwork, there is a table containing the network connections.</p>
+		  <p>Click on the pubmed ID, which will reveal the abstract and show you the entities that show the association.</p>
+		  <p>For example the CESA1 interacts with CESA3 association was found by the analysis of this abstract:</p>
+			<p><img src="{{ url_for('static', filename='abstractanalysis.png') }}" style="max-width: 100%;" alt="My Image"></p>
+		</li>
+        <li>
+          <p><strong>How accurate is GPT in extracting the information from abstracts?</strong></p>
+          <p>It's definitely not 100% accurate, as some of the results it identified are wrong, and it also misses some relationships.</p>
+		  <p>Thus, if you find an interesting relationship, you should check the relevant abstract to confirm that GPT did not make a mistake!</p>
+		  <p>We are currently benchmarking the inferences, stay put.</p>
+		</li>
+      </ul>
+    </div>
+  </body>
+</html>
