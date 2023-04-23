@@ -144,10 +144,11 @@
 <form action="/search" method="POST" onsubmit="submitGeneForm(event)" id="gene-form">
   <label for="gene_id">Enter Gene ID/molecule/compartment</label>
   <input type="text" id="gene_id" name="gene_id" placeholder="CESA">
-  <a href="#" onclick="submitFormWith(event, 'pin1')">pin1</a>
-  <a href="#" onclick="submitFormWith(event, 'proline')">proline</a>
-  <a href="#" onclick="submitFormWith(event, 'heat')">heat</a>
-  <a href="#" onclick="submitFormWith(event, 'root hair')">root hair</a>
+  <a href="#" onclick="submitFormWith(event, 'dauer')">dauer</a>
+  <a href="#" onclick="submitFormWith(event, 'autophagy')">autophagy</a>
+  <a href="#" onclick="submitFormWith(event, 'ER stress')">ER stress</a>
+  <a href="#" onclick="submitFormWith(event, 'longevity')">longevity</a>
+  <a href="#" onclick="submitFormWith(event, 'starvation')">starvation</a>
   <br>
   <input type="submit" value="Search">
 </form>
@@ -155,7 +156,7 @@
 <form action="/author" method="POST" onsubmit="submitNameForm(event)" id="name-form">
   <label for="author">Enter Author Name (without special characters)</label>
   <input type="text" id="author" name="author" placeholder="John Doe">
-  <a href="#" onclick="submitFormWith(event, 'Marek Mutwil')">Marek Mutwil</a>
+  <a href="#" onclick="submitFormWith(event, 'Guillaume Thibault')">Guillame Thibault</a>
   <br>
   <input type="submit" value="Search">
 </form>
