@@ -1,5 +1,6 @@
 annotations/
 junk/
+data_collection/
 pickle_maker.py
 main.py
 GPT_surfer_by_pubmedID.py
