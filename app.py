@@ -53,13 +53,13 @@ def find_terms(my_search, genes):
                     for j in genes[i]:
                         if j[0]!='' and j[2]!='':
                             forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
-                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})                
+                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1].replace("'","").replace('"','')})                
             if my_search.upper().strip() in i.strip():
                 print(i,'asd')
                 for j in genes[i]:
                     if j[0]!='' and j[2]!='':
                         forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
-                        elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})
+                        elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1].replace("'","").replace('"','')})
     return elements, forSending
 
 app = Flask(__name__)
@@ -131,7 +131,7 @@ def author():
                         if j[0]!='' and j[2]!='':
                             papers.append(j[3])
                             forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
-                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})                
+                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1].replace("'","").replace('"','')})                
                         break
 
     
@@ -176,8 +176,8 @@ def title():
                 for j in genes[i]:
                     if j[3] in hits:
                         if j[0]!='' and j[2]!='':
-                            forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type
-                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1]})                
+                            forSending.append(Gene(j[0], j[2], j[1], j[3])) #source, target, type 
+                            elements.append({"source": j[0].replace("'","").replace('"',''), "target": j[2].replace("'","").replace('"',''), "interaction": j[1].replace("'","").replace('"','')})                
                         break
 
     if forSending!=[]:
