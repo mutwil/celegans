@@ -2,20 +2,43 @@
 <html>
   <head>
     <title>CelegansConnectome</title>
-    <style>
-      /* Add styles for the page header */
-      header {
-        background-color: #333;
-        color: #fff;
+        <style>
+    /* Add global font style and dark mode background */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+  }
+            /* Add styles for the page header and footer */
+      header, footer {
+        background-color: #212121;
+        color: #ffffff;
         padding: 20px;
         text-align: center;
       }
       h1 {
         margin: 0;
       }
+/* Style intro text class */
+.intro-container {
+  max-width: 1600px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.6;
+}
 
-      /* Add styles for the search form */
-      form {
+.intro-text {
+  margin: 0;
+}
+
+
+/* Change form, stats, search-tips, and future divs to a dark background color */
+form, .stats, .search-tips, .future {
+    background-color: #1f1f1f;
+    color: #ffffff;
+      
         margin: 20px auto;
         max-width: 600px;
         padding: 20px;
@@ -28,7 +51,9 @@
         margin-bottom: 10px;
         font-size: 18px;
       }
-      input[type="text"] {
+      input[type="text"], textarea {
+    background-color: #262626;
+    color: #ffffff;
         width: 100%;
         padding: 10px;
         font-size: 18px;
@@ -37,21 +62,13 @@
         box-sizing: border-box;
       }
       input[type="submit"] {
-        background-color: #333;
-        color: #fff;
+    background-color: #454545;
+    color: #ffffff;
         padding: 10px 20px;
         font-size: 18px;
         border-radius: 5px;
         border: none;
         cursor: pointer;
-      }
-
-      /* Add styles for the footer */
-      footer {
-        background-color: #333;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
       }
 	  
       /* Add styles for the search tips */
@@ -106,11 +123,24 @@
 .chart-title {
   text-align: center;
 }
+
+.help-button {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
     </style>
   </head>
   <body>
     <header>
       <h1><em>C. eleagans </em>Connectome</h1>
+      <p>Welcome to the <strong><em>C. elegans</em> Connectome</strong>, your one-stop resource for discovering intricate relationships between genes, molecules, compartments, stresses, organs, and various other entities in the fascinating world of <em>C. elegans</em> biology. Our comprehensive database boasts an impressive collection of 131,891 entities and 31,740 meticulously analyzed publication abstracts. Dive into the vast expanse of knowledge by using our user-friendly search form below, and don't forget to consult our helpful stats and search tips for a smoother experience. Embark on your journey into the realm of <em>C. elegans</em> now!
+      </p>
+      <button class="help-button" onclick="window.location.href='/help'">Help</button>
     </header>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -143,7 +173,7 @@
 
 <form action="/search" method="POST" onsubmit="submitGeneForm(event)" id="gene-form">
   <label for="gene_id">Enter Gene ID/molecule/compartment</label>
-  <input type="text" id="gene_id" name="gene_id" placeholder="CESA">
+  <input type="text" id="gene_id" name="gene_id" placeholder="lgg-1">
   <a href="#" onclick="submitFormWith(event, 'dauer')">dauer</a>
   <a href="#" onclick="submitFormWith(event, 'autophagy')">autophagy</a>
   <a href="#" onclick="submitFormWith(event, 'ER stress')">ER stress</a>
@@ -165,7 +195,7 @@
 	
     <form action="/title" method="POST">
       <label for="title">Enter paper title</label>
-      <input type="text" id="title" name="title" placeholder="Ancestral genome reconstruction for studies of the green lineage">
+      <input type="text" id="title" name="title" placeholder="​Stress sensor Ire1 deploys a divergent transcriptional program in response to lipid bilayer stress">
       <input type="submit" value="Search">
     </form>
 	
@@ -191,8 +221,8 @@
 	<div class="future">
 	  <h2>Future:</h2>
       <ul>
-        <li>Grind through all abstracts from journals indexed in PubMed</li>
-		<li>Date range: 2000-now</li>
+        <li>Analyze and extract insights from the entirety of abstracts featured in PubMed-indexed journals</li>
+		<li>Date range: 2004-now</li>
       </ul>
     </div>
 	<div class="future">
@@ -236,6 +266,14 @@
         position: "top",
         padding: 0,
       },
+      plugins: {
+  legend: {
+    labels: {
+      color: 'rgba(200, 200, 200, 1)', // Change this to the desired color
+    },
+  },
+},
+
     },
   });    </script>
     <footer>
