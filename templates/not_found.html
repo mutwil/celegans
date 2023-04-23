@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Gene not found</title>
+    <title>No hits were found using your query</title>
     <style>
       /* Add styles for the error message */
       .error-message {
@@ -31,7 +31,7 @@
   </head>
   <body>
     <div class="error-message">
-      <h2>Gene not found</h2>
+      <h2>No hits were found using your query</h2>
       <p>Please try another search term or check your spelling.</p>
       <button onclick="window.location.href='{{ url_for('index') }}'">Go back</button>
     </div>
