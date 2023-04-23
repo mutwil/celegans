@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PlantConnectome</title>
+    <title>CelegansConnectome</title>
     <style>
       /* Add styles for the page header */
       header {
@@ -110,7 +110,7 @@
   </head>
   <body>
     <header>
-      <h1>PlantConnectome</h1>
+      <h1><em>C. eleagans </em>Connectome</h1>
     </header>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -142,13 +142,12 @@
 </script>
 
 <form action="/search" method="POST" onsubmit="submitGeneForm(event)" id="gene-form">
-  <label for="gene_id">Enter Gene ID, molecule, compartment</label>
+  <label for="gene_id">Enter Gene ID/molecule/compartment</label>
   <input type="text" id="gene_id" name="gene_id" placeholder="CESA">
   <a href="#" onclick="submitFormWith(event, 'dauer')">dauer</a>
   <a href="#" onclick="submitFormWith(event, 'autophagy')">autophagy</a>
   <a href="#" onclick="submitFormWith(event, 'ER stress')">ER stress</a>
   <a href="#" onclick="submitFormWith(event, 'longevity')">longevity</a>
-  <a href="#" onclick="submitFormWith(event, 'starvation')">starvation</a>
   <br>
   <input type="submit" value="Search">
 </form>
@@ -156,7 +155,7 @@
 <form action="/author" method="POST" onsubmit="submitNameForm(event)" id="name-form">
   <label for="author">Enter Author Name (without special characters)</label>
   <input type="text" id="author" name="author" placeholder="John Doe">
-  <a href="#" onclick="submitFormWith(event, 'Guillaume Thibault')">Guillame Thibault</a>
+  <a href="#" onclick="submitFormWith(event, 'Guillaume Thibault')">Guillaume Thibault</a>
   <br>
   <input type="submit" value="Search">
 </form>
@@ -182,9 +181,9 @@
       <h2>Search Tips:</h2>
       <ul>
         <li>Search by gene/molecule/compartment/stress/organ or some other term</li>
-		<li>E.g., you could search for cesa/proline/mitochondria/heat/flower</li>
+		<li>E.g., you could search for dauer, autophagy, ER stress, longevity, or starvation</li>
 		<li>The search engine is very primitive (for now), so 100% match is required</li>
-        <li>Use partial search terms to broaden your results (e.g. "CESA" instead of "CESA1")</li>
+        <li>Use partial search terms to broaden your results (e.g. "him" instead of "him-14")</li>
         <li>Try searching for related terms or synonyms</li>
       </ul>
     </div>
@@ -192,8 +191,8 @@
 	<div class="future">
 	  <h2>Future:</h2>
       <ul>
-        <li>Grind through all abstracts from Plant Cell/Physiology/Journal and other main journals</li>
-		<li>Date range: 2005-now</li>
+        <li>Grind through all abstracts from journals indexed in PubMed</li>
+		<li>Date range: 2000-now</li>
       </ul>
     </div>
 	<div class="future">
@@ -202,10 +201,45 @@
 	<h2 class="chart-title">Processed journals and abstracts</h2>
 	<canvas id="piechart"></canvas>
     <script>
-      {{ piechart_code | safe }}
-    </script>
+<h2 class="chart-title">Processed journals and abstracts</h2>
+<canvas id="piechart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Define a color blind friendly color palette with 20 colors
+  var colorPalette = [
+    '#1F77B4', '#AEC7E8', '#FF7F0E', '#FFBB78', '#2CA02C', '#98DF8A',
+    '#D62728', '#FF9896', '#9467BD', '#C5B0D5', '#8C564B', '#C49C94',
+    '#E377C2', '#F7B6D2', '#7F7F7F', '#C7C7C7', '#BCBD22', '#DBDB8D',
+    '#17BECF', '#9EDAE5'
+  ];
+
+  var ctx = document.getElementById("piechart").getContext("2d");
+  var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['PloS one', 'Genetics', 'PLoS genetics', 'Proceedings of the National Academy of Sciences of the United States of America', 'Current biology : CB', 'Developmental biology', 'Scientific reports', 'Development (Cambridge, England)', 'The Journal of biological chemistry', 'eLife', 'Nature communications', 'Methods in molecular biology (Clifton, N.J.)', 'Developmental cell', 'Nucleic acids research', 'Nature', 'Molecular biology of the cell', 'G3 (Bethesda, Md.)', 'Cell', 'microPublication biology', 'The Journal of cell biology', 'Other'],
+      datasets: [
+        {
+          label: "Number of papers",
+          data: [979, 716, 685, 652, 626, 472, 458, 453, 450, 449, 367, 337, 326, 310, 296, 295, 290, 288, 284, 251, 19462],
+          backgroundColor: colorPalette,
+          borderColor: colorPalette,
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Processed journals and abstracts",
+        fontSize: 18,
+        position: "top",
+        padding: 0,
+      },
+    },
+  });    </script>
     <footer>
-      &copy; 2023 PlantConnectome @labmutwil
+      &copy; 2023 CelegansConnectome @labmutwil
     </footer>
   </body>
 </html>
