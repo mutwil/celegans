@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>3DGO</title>
+    <title>PlantConnectome</title>
     <style>
       /* Add styles for the page header */
       header {
@@ -88,23 +88,86 @@
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         font-size: 16px;
       }
+	  .selected {
+		  background-color: red;
+		  cursor: move;
+		}
+		
+#piechart {
+  width: 600px;
+  height: 2000px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+.chart-title {
+  text-align: center;
+}
     </style>
   </head>
   <body>
     <header>
-      <h1>3D Genome Organization Database</h1>
-	  <p>This database (very early development) used GPT to identify functional associations between genes, molecules, compartments and other entities. The topic of this database is: 3D genome organization.</p>
-	  <p>The database was created by asking GPT to scan abstracts of research articles.</p>
-	  <p><b>The topic of this database is: 3D genome organization.</b></p>
-
+      <h1>PlantConnectome</h1>
     </header>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  function submitGeneForm(event) {
+    const titleInput = document.getElementById("gene_id");
+    if (titleInput.value === "") {
+      titleInput.value = titleInput.placeholder;
+    }
+  }
+
+  function submitNameForm(event) {
+    const titleInput = document.getElementById("author");
+    if (titleInput.value === "") {
+      titleInput.value = titleInput.placeholder;
+    }
+  }
+
+  function submitFormWith(event, value) {
+    event.preventDefault();
+    // Submit the form with the clicked value
+    const link = event.target;
+    const form = link.closest('form');
+    const input = form.querySelector('input[type="text"]');
+    input.value = value;
+    form.submit();
+  }
+  
+
+</script>
+
+<form action="/search" method="POST" onsubmit="submitGeneForm(event)" id="gene-form">
+  <label for="gene_id">Enter Gene ID/molecule/compartment</label>
+  <input type="text" id="gene_id" name="gene_id" placeholder="CESA">
+  <a href="#" onclick="submitFormWith(event, 'pin1')">pin1</a>
+  <a href="#" onclick="submitFormWith(event, 'proline')">proline</a>
+  <a href="#" onclick="submitFormWith(event, 'heat')">heat</a>
+  <a href="#" onclick="submitFormWith(event, 'root hair')">root hair</a>
+  <br>
+  <input type="submit" value="Search">
+</form>
+
+<form action="/author" method="POST" onsubmit="submitNameForm(event)" id="name-form">
+  <label for="author">Enter Author Name (without special characters)</label>
+  <input type="text" id="author" name="author" placeholder="John Doe">
+  <a href="#" onclick="submitFormWith(event, 'Marek Mutwil')">Marek Mutwil</a>
+  <br>
+  <input type="submit" value="Search">
+</form>
 	
-    <form action="/search" method="POST">
-      <label for="gene_id">Enter Gene ID/molecule/compartment</label>
-      <input type="text" id="gene_id" name="gene_id" placeholder="e.g. ESR1">
+		
+
+	
+    <form action="/title" method="POST">
+      <label for="title">Enter paper title</label>
+      <input type="text" id="title" name="title" placeholder="Ancestral genome reconstruction for studies of the green lineage">
       <input type="submit" value="Search">
     </form>
-	
 	
 	<div class="stats">
 	  <h2>Stats:</h2>
@@ -118,9 +181,9 @@
       <h2>Search Tips:</h2>
       <ul>
         <li>Search by gene/molecule/compartment/stress/organ or some other term</li>
-		<li>E.g., you could search for esr1/envelope/heat</li>
+		<li>E.g., you could search for cesa/proline/mitochondria/heat/flower</li>
 		<li>The search engine is very primitive (for now), so 100% match is required</li>
-        <li>Use partial search terms to broaden your results (e.g. "esr1" instead of "esr1 binding")</li>
+        <li>Use partial search terms to broaden your results (e.g. "CESA" instead of "CESA1")</li>
         <li>Try searching for related terms or synonyms</li>
       </ul>
     </div>
@@ -128,15 +191,20 @@
 	<div class="future">
 	  <h2>Future:</h2>
       <ul>
-        <li>Grind through all abstracts from main journals</li>
+        <li>Grind through all abstracts from Plant Cell/Physiology/Journal and other main journals</li>
 		<li>Date range: 2005-now</li>
       </ul>
     </div>
 	<div class="future">
-	  <img src="{{ url_for('static', filename='capture.png') }}" alt="App Screenshot" style="max-width: 100%;">
+	  <img src="{{ url_for('static', filename='Capture.PNG') }}" alt="App Screenshot" style="max-width: 100%;">
 	</div>
+	<h2 class="chart-title">Processed journals and abstracts</h2>
+	<canvas id="piechart"></canvas>
+    <script>
+      {{ piechart_code | safe }}
+    </script>
     <footer>
-      &copy; 2023 HumanConnectome @labmutwil
+      &copy; 2023 PlantConnectome @labmutwil
     </footer>
   </body>
 </html>

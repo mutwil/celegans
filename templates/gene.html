@@ -3,14 +3,24 @@
   <head>
     <title>Gene Information</title>
     <style>
-      h1 {
+      /* Add styles for the page header */
+      header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
         text-align: center;
       }
+      h1 {
+        margin: 0;
+      }
 
+      /* Add styles for the search results section */
+      section {
+        margin: 30px;
+      }
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 30px;
         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
         background-color: white;
       }
@@ -27,36 +37,194 @@
         font-weight: bold;
       }
 
+      /* Add styles for the cytoscape section */
+      .cy-wrapper {
+        width: 90%;
+        height: 1200px;
+        margin: 30px auto;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        background-color: white;
+		margin-top: -1px;
+      }
 
+      /* Add styles for the paper popup */
+      .paper-popup {
+        background-color: black;
+        color: white;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      /* Add styles for the red text */
+      .red-text {
+        color: red;
+      }
+
+      /* Add styles for the page footer */
+      footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
 	  
+      /* Add styles for the search form */
+      form {
+        background-color: #f8f8f8;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      /* Add styles for the search form label */
+      label[for="node-search"] {
+        margin-right: 10px;
+      }
+
+      /* Add styles for the search form input */
+      #node-search {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+
+      /* Add styles for the search form button */
+      button[type="submit"] {
+        background-color: #f8f8f8;
+        color: #606060;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: none;
+        transition: all 0.3s ease;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #e6e6e6;
+        border-color: #adadad;
+      }
 	  
-	#cy {
-	  width: 100%;
-	  height: 1200px;
-	  border: 1px solid gray;
-	  margin-top: 30px;
-	  background-color: white !important;
-	}
-	
-	.faded {
-	  opacity: 0.3;
-	  background-color: red;
-	}
-	  body {
-		background-color: white;
-	  }
-	
-	.paper-popup {
-    background-color: black;
-    color: white;
-	  width: 100%;
-	  padding: 20px;
-    box-sizing: border-box;
-	}
-	
-	.red-text {
-  color: red;
-}
+		/* The popup form - hidden by default */
+		.form-popup {
+			display: none;
+			position: absolute;
+			top: 30px;
+			left: 5px;
+			width: 100%;
+			border: 3px solid #f1f1f1;
+			z-index: 999;
+			background-color: #e6e6e6;
+			opacity: 0.7;
+		}
+	  
+		/* Button used to open the contact form */
+		.open-button {
+		  background-color: #555;
+		  color: white;
+		  padding: 7px 10px;
+		  border: none;
+		  cursor: pointer;
+		  opacity: 0.8;
+		  width: 282px;
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		}
+
+		
+		/* Add styles to the form container */
+		.form-container {
+			max-width: 100%;
+			padding: 10px;
+			background-color: black;
+		}
+
+		/* Full-width input fields */
+		.form-container input[type=number] {
+			width: 30%;
+			padding: 7px 7px;
+			border: none;
+			background: black;
+		}
+
+		/* When the inputs get focus, do something */
+		.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+			outline: none;
+		}
+
+		/* Set a style for the submit/login button */
+		.form-container .btn {
+			background-color: #4CAF50;
+			color: white;
+			padding: 5px 5px;
+			border: none;
+			cursor: pointer;
+			width: 100%;
+			margin-bottom:10px;
+			opacity: 0.8;
+		}
+
+		/* Add a red background color to the cancel button */
+		.cancel-button {
+		  background-color: #ff5b49;
+		  color: white;
+		  padding: 10px 24px;
+		  border: none;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  margin-right: 10px;
+		  margin-bottom: 10px;
+		  flex: 1;
+		  width: 10%;
+		}
+
+		/* Add some hover effects to buttons */
+		.form-container .btn:hover, .open-button:hover , .cancel-button:hover,.layoutButton:hover, #graphml:hover{
+			opacity: 1;
+		}
+		
+		.option-button {
+		  background-color: #4CAF50;
+		  color: white;
+		  padding: 10px 24px;
+		  border: none;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  margin-right: 10px;
+		  margin-bottom: 10px;
+		  flex: 1;
+		  width: 10%;
+		}
+
+		
+		.option-button:hover {
+		  background-color: #3e8e41;
+		}
+		
+		.cancel-button:hover {
+		  background-color: #8c180f;
+		}
+		
+		.button-container {
+		  display: flex;
+		  justify-content: space-between;
+		  align-items: center;
+		  margin-top: 10px;
+		}
+
+		.button-container .option-button {
+		  width: 50%;
+		}
+
+		.button-container .cancel-button {
+		  width: 50%;
+		}
+
+
     </style>
 
   <script src="https://unpkg.com/cytoscape@3.23.0/dist/cytoscape.min.js"></script>
@@ -68,19 +236,68 @@
   
   </head>
   <body>
-    <h1>Pan/zoom with mouse, scroll down on the right side of the page</h1>
-	
-	<div class="cy-wrapper" style="width: 90%; height: 1200px; overflow: hidden;">
-		<div id="cy" style="width: 100%; height: 100%; background-color: white !important;"></div>
+    <h1 style="text-align: center;">Search results for: '{{ search_term }}', with {{ number_papers }} papers in our database on the topic</h1>
+	{% if warning %}
+	  <p style="color: red; text-align: center;">{{ warning }}</p>
+	{% endif %}
+	<form id="node-search-form" style="text-align: center;">
+	  <input type="text" id="node-search" name="node-search" placeholder="Search a node by name" />
+	  <button type="submit">Submit</button>
+	</form>
+
+	<div class="cy-wrapper" style="width: 90%; height: 1200px; overflow: hidden; position: relative; background-color: black;">
+	  <div id="cy" style="width: 100%; height: 100%; background-color: white !important;"></div>
+	  <button class="open-button" onclick="openForm()">Layout Options</button>
+	  <div class="form-popup" id="myForm">
+		<div class="form-container">
+		  <div class="button-container">
+		  <button class="option-button" onclick="recalculateLayout()">Recalculate layout</button>
+		  <button type="button" class="cancel-button" onclick="closeForm()"><b>Close Options</b></button>
+		  </div>
+		  <div id="interaction"></div>
+		</div>
+	  </div>
 	</div>
-	
 
     <script>
+    var searchForm = document.getElementById('node-search-form');
+    searchForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const searchTerm = event.target[0].value.toLowerCase();
+        const cy = document.getElementById('cy')._cyreg.cy;
+        const matchingNodes = cy.nodes().filter(function(node) {
+          const nodeId = node.id().toLowerCase();
+          if (nodeId === searchTerm)
+            return true;
+          return nodeId.includes(searchTerm);
+        })
+        cy.nodes().style('opacity', '0.5');
+        matchingNodes.style('opacity', '1');
+      });
+
       {{ cytoscape_js_code | safe }}
+
+	function recalculateLayout() {
+	  const cy = document.getElementById('cy')._cyreg.cy;
+	  const visibleNodes = cy.elements(':visible');
+	  const layout = visibleNodes.layout({
+		name: 'cose',
+		animate: true,
+		randomize: true,
+		idealEdgeLength: 100,
+		nodeOverlap: 20,
+		refresh: 20,
+		fit: true,
+		padding: 0,
+		boundingBox: undefined,
+		nodeDimensionsIncludeLabels: false,
+		excludeFromLayout: cy.nodes(':hidden')
+	  });
+	  layout.run();
+	}
+
     </script>
-	
-	<div id="interaction"></div>
-	
+
     <table class="sortable">
       <thead>
         <tr>
@@ -155,8 +372,7 @@
 		  underlinedData = underlinedData.replace(targetRegex, "<u><span class='red-text'>$&</span></u>");
 		}
 		var popupHTML = "<div class='paper-popup'><h2>" + source + " " + typa + " " + target + "</h2><pre>" + underlinedData + "</pre></div>";
-		var css = "<style>.popup-text { font-family: sans-serif; }</style>";
-		popupHTML = css + popupHTML;
+
 
 		
 		// Display the popup using the jQuery UI dialog function

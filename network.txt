@@ -1,3 +1,103 @@
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+  
+  const cy = document.getElementById('cy')._cyreg.cy;
+  const edges = cy.edges();
+  const edgeCounts = {};
+  const showOnlyTypes = new Set();
+  
+  // count number of edges for each type
+  edges.forEach(function(edge) {
+    const type = edge.data().interaction;
+    if (edgeCounts[type] === undefined) {
+      edgeCounts[type] = 0;
+    }
+    edgeCounts[type]++;
+  });
+  
+  // sort edge types by count
+	const sortedEdgeTypes = Object.keys(edgeCounts).sort(function(a, b) {
+	  return edgeCounts[b] - edgeCounts[a];
+	}).slice(0, 120);
+
+  const interactionDiv = document.getElementById('interaction');
+  interactionDiv.innerHTML = '';
+
+  // create checkboxes for each edge type
+  const numColumns = Math.ceil(sortedEdgeTypes.length / 30);
+  const numTypesPerColumn = Math.ceil(sortedEdgeTypes.length / numColumns);
+  let columnCounter = 0;
+  let typeCounter = 0;
+  let currentColumn;
+
+  sortedEdgeTypes.forEach(function(type) {
+    const label = document.createElement('label');
+    label.innerText = `${type} (${edgeCounts[type]})`;
+
+    const showOnlyCheckbox = document.createElement('input');
+    showOnlyCheckbox.type = 'checkbox';
+    showOnlyCheckbox.value = 'show-only';
+    showOnlyCheckbox.onclick = function() {
+      if (!showOnlyTypes.has(type)) {
+        showOnlyTypes.add(type);
+      } else {
+        showOnlyTypes.delete(type);
+      }
+      
+      updateEdges();
+    };
+
+    label.prepend(showOnlyCheckbox);
+
+    const interactionTypeDiv = document.createElement('div');
+    interactionTypeDiv.append(label);
+
+    if (typeCounter % numTypesPerColumn === 0) {
+      currentColumn = document.createElement('div');
+      currentColumn.style.float = 'left';
+      currentColumn.style.width = 'calc(100% / ' + numColumns + ')';
+      interactionDiv.appendChild(currentColumn);
+      columnCounter++;
+    }
+
+    currentColumn.appendChild(interactionTypeDiv);
+    typeCounter++;
+  });
+  
+  function updateEdges() {
+    const shownEdges = cy.edges().filter(function(edge) {
+      const type = edge.data().interaction;
+      return showOnlyTypes.size === 0 || showOnlyTypes.has(type);
+    });
+
+    const connectedNodes = new Set();
+    shownEdges.forEach(function(edge) {
+      connectedNodes.add(edge.source());
+      connectedNodes.add(edge.target());
+    });
+
+    cy.nodes().forEach(function(node) {
+      if (!connectedNodes.has(node)) {
+        node.hide();
+      } else {
+        node.show();
+      }
+    });
+
+    cy.edges().hide();
+    shownEdges.show();
+
+  }
+}
+
+
+
+
+// Add an event listener to the button to handle the click event
+document.querySelector(".open-button").addEventListener("click", openForm);
+
+function closeForm() { document.getElementById("myForm").style.display = "none"; }
+
 document.addEventListener('DOMContentLoaded', function () {
   const cy = cytoscape({
 	container: document.getElementById('cy'),
@@ -49,57 +149,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	layout: {
 	  name: 'cose',
+		ready: function () {
+		  const layout = this;
+
+		  // Stop the layout after 2 seconds
+		  setTimeout(function () {
+			layout.stop();
+		  }, 20000);
+		}
 	}
   });
+  
 cy.on('click', 'node', function(evt){
 	var node = evt.target;
 	var neighborhood = node.neighborhood().add(node);
 	var nonNeighbors = cy.nodes().difference(neighborhood);
 	neighborhood.style('opacity', '1');
 	nonNeighbors.style('opacity', '0.5');
-
-	// Get the types of edges
-	var edgeTypes = cy.edges().map(function(edge) {
-	  return edge.data('interaction');
-	});
-
-	// Count the number of occurrences of each edge type
-	var edgeTypeCounts = {};
-	edgeTypes.forEach(function(type) {
-	  edgeTypeCounts[type] = (edgeTypeCounts[type] || 0) + 1;
-	});
-
-	// Sort the edge types by the number of occurrences
-	var sortedEdgeTypes = Object.keys(edgeTypeCounts).sort(function(a, b) {
-	  return edgeTypeCounts[b] - edgeTypeCounts[a];
-	});
-
-	// Get the top 50 edge types
-	var top50EdgeTypes = sortedEdgeTypes.slice(0, 50);
-
-	// Create a string of the top 50 edge types and their counts
-	var edgeTypeHTML = '';
-	top50EdgeTypes.forEach(function(type) {
-	  edgeTypeHTML += '<li>' + type + ': ' + edgeTypeCounts[type] + '</li>';
-	});  
-	if(top50EdgeTypes.length > 0) {
-	  var edgeTypeHTML = '';
-	  top50EdgeTypes.forEach(function(type) {
-		edgeTypeHTML += '<li>' + type + ': ' + edgeTypeCounts[type] + '</li>';
-	  });  
-	  document.getElementById('interaction').innerHTML = '<ul>' + edgeTypeHTML + '</ul>';
-	} else {
-	  document.getElementById('interaction').innerHTML = 'No edges found';
-	}
-
-
 });
 
-cy.on('mouseout', 'node', function(evt){
+cy.on('click', function(evt){
+  if( evt.target === cy ){
+    cy.nodes().style('opacity', '1');
+  }
+});
 
+var removedEles = cy.collection();
+
+cy.on('dblclick', 'node', function(evt){
   var node = evt.target;
   var neighborhood = node.neighborhood().add(node);
-
+  removedEles = cy.elements().difference(neighborhood).remove();
+  neighborhood.select();
 });
+
+cy.on('dblclick', function(evt){
+  if(evt.target === cy){
+    removedEles.restore();
+  }
+});
+
+cy.on('cxttap', 'node', function(evt){
+  var node = evt.target;
+  node.remove();
+});
+
+
+
 }
 );
