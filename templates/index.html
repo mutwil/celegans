@@ -139,8 +139,7 @@ form, .stats, .search-tips, .future {
     <header>
       <h1><em>C. eleagans </em>Connectome</h1>
       <p>Welcome to the <strong><em>C. elegans</em> Connectome</strong>, your one-stop resource for discovering intricate relationships between genes, molecules, compartments, stresses, organs, and various other entities in the fascinating world of <em>C. elegans</em> biology. Our comprehensive database boasts an impressive collection of 131,891 entities and 31,740 meticulously analyzed publication abstracts. Dive into the vast expanse of knowledge by using our user-friendly search form below, and don't forget to consult our helpful stats and search tips for a smoother experience. Embark on your journey into the realm of <em>C. elegans</em> now!</p>
-	  <button class="help-button" onclick="window.location.href='help.html'">Help</button>
-
+	  <button class="help-button" onclick="window.location.href='{{ url_for('help') }}'">Help</button>
     </header>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

@@ -223,6 +223,10 @@ def search():
     else:
         return render_template('not_found.html')
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
 if __name__ == '__main__':
     import os
     items, edges = [],0
